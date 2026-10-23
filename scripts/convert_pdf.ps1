@@ -1,14 +1,16 @@
-$docPath = (Resolve-Path "docs\TrueTrace_Final_Project_Report.docx").Path
+param (
+    [string]$DocName = "docs\TrueTrace_PPT_Presentation_Content.docx"
+)
+
+$docPath = (Resolve-Path $DocName).Path
 $pdfPath = [System.IO.Path]::ChangeExtension($docPath, ".pdf")
 
 try {
     $word = New-Object -ComObject Word.Application
     $word.Visible = $false
     $doc = $word.Documents.Open($docPath)
-    # 2 is wdStatisticPages
     $pages = $doc.ComputeStatistics(2)
     Write-Host "Total Pages: $pages"
-    # 17 is wdFormatPDF
     $doc.SaveAs($pdfPath, 17)
     Write-Host "Saved PDF to $pdfPath"
     $doc.Close($false)
