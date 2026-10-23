@@ -70,14 +70,21 @@ export const OverviewView: React.FC<OverviewViewProps> = ({
     <div>
       {/* Top Banner with Theoretical Guarantees */}
       <div className="card" style={{ background: 'linear-gradient(135deg, #0d1627 0%, #111d33 100%)', borderColor: 'var(--border-focus)' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <div>
-            <h2 style={{ fontSize: '1.25rem', fontWeight: 600, color: '#fff', marginBottom: '0.25rem' }}>
-              {investigation.name}
-            </h2>
-            <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>
-              {investigation.description || 'Forensic verification workspace initialized.'}
-            </p>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '1rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '1.25rem' }}>
+            <img 
+              src="/truetrace_icon.png" 
+              alt="TrueTrace Emblem" 
+              style={{ height: '54px', width: 'auto', objectFit: 'contain' }}
+            />
+            <div>
+              <h2 style={{ fontSize: '1.25rem', fontWeight: 600, color: '#fff', marginBottom: '0.25rem' }}>
+                {investigation.name}
+              </h2>
+              <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>
+                {investigation.description || 'Forensic verification workspace initialized.'}
+              </p>
+            </div>
           </div>
           <button 
             className="btn btn-primary" 

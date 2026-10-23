@@ -1,5 +1,5 @@
 import React from 'react';
-import { Shield, Activity, Plus, RefreshCw, FolderSearch } from 'lucide-react';
+import { Plus, RefreshCw, FolderSearch } from 'lucide-react';
 import { Investigation } from '../types';
 
 interface NavbarProps {
@@ -20,15 +20,17 @@ export const Navbar: React.FC<NavbarProps> = ({
   return (
     <header className="top-navbar">
       <div className="brand-section">
-        <div className="brand-logo">
-          <Shield size={22} />
-        </div>
-        <div>
-          <div className="brand-title">
-            TrueTrace <span style={{ fontSize: '0.75rem', fontWeight: 400, color: 'var(--cyan-primary)' }}>v1.0-RESEARCH</span>
+        <img 
+          src="/truetrace_logo.png" 
+          alt="TrueTrace — From Logs To Truth" 
+          style={{ height: '46px', width: 'auto', objectFit: 'contain' }}
+        />
+        <div style={{ borderLeft: '1px solid var(--border)', paddingLeft: '0.75rem', marginLeft: '0.25rem' }}>
+          <div style={{ fontSize: '0.72rem', fontWeight: 700, color: 'var(--cyan-primary)', letterSpacing: '0.08em' }}>
+            VERIFICATION WORKBENCH
           </div>
-          <div className="brand-subtitle">
-            Network-Grounded Attack Trace Verification & Invariant Arbitration
+          <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>
+            Observability-Aware Invariant Arbitration
           </div>
         </div>
       </div>

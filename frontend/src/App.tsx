@@ -193,7 +193,7 @@ export function App() {
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
             <div className="card-header">
               <div className="card-title">
-                <Shield size={18} color="var(--cyan-primary)" /> Initialize New Investigation Case
+                <img src="/truetrace_icon.png" alt="TrueTrace" style={{ height: '22px', width: 'auto' }} /> Initialize New Investigation Case
               </div>
               <button 
                 className="btn btn-secondary" 
