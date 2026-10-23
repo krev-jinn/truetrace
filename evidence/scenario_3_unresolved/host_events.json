@@ -1,0 +1,21 @@
+[
+  {
+    "event_type": "PROCESS_SPAWN",
+    "timestamp": 1718000020.0,
+    "process_id": 3100,
+    "process_name": "vpn_agent",
+    "parent_process_id": 800
+  },
+  {
+    "event_type": "SOCKET_CONNECT",
+    "timestamp": 1718000020.3,
+    "process_id": 3100,
+    "process_name": "vpn_agent",
+    "src_ip": "10.0.0.5",
+    "src_port": 52000,
+    "dst_ip": "172.16.50.2",
+    "dst_port": 8443,
+    "protocol": "TCP",
+    "return_code": 0
+  }
+]

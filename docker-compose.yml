@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./evidence:/app/evidence
+      - ./truetrace.db:/app/truetrace.db
+    environment:
+      - TRUETRACE_DB_PATH=/app/truetrace.db
+      - TRUETRACE_EVIDENCE_DIR=/app/evidence
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend

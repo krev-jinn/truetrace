@@ -1,0 +1,48 @@
+[
+  {
+    "event_type": "PROCESS_SPAWN",
+    "timestamp": 1718000000.0,
+    "process_id": 1010,
+    "process_name": "bash",
+    "parent_process_id": 1000
+  },
+  {
+    "event_type": "FILE_READ",
+    "timestamp": 1718000000.1,
+    "process_id": 1010,
+    "process_name": "bash",
+    "file_path": "/etc/shadow"
+  },
+  {
+    "event_type": "PROCESS_SPAWN",
+    "timestamp": 1718000000.2,
+    "process_id": 1025,
+    "process_name": "exfil_agent",
+    "parent_process_id": 1010
+  },
+  {
+    "event_type": "SOCKET_CONNECT",
+    "timestamp": 1718000000.5,
+    "process_id": 1025,
+    "process_name": "exfil_agent",
+    "src_ip": "192.168.1.105",
+    "src_port": 49152,
+    "dst_ip": "198.51.100.4",
+    "dst_port": 443,
+    "protocol": "TCP",
+    "return_code": 0
+  },
+  {
+    "event_type": "SOCKET_SEND",
+    "timestamp": 1718000000.7,
+    "process_id": 1025,
+    "process_name": "exfil_agent",
+    "src_ip": "192.168.1.105",
+    "src_port": 49152,
+    "dst_ip": "198.51.100.4",
+    "dst_port": 443,
+    "protocol": "TCP",
+    "bytes_count": 1024,
+    "return_code": 1024
+  }
+]

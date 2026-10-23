@@ -1,0 +1,34 @@
+[
+  {
+    "event_type": "PROCESS_SPAWN",
+    "timestamp": 1792668862.8674037,
+    "process_id": 2076,
+    "process_name": "python.exe",
+    "parent_process_id": 1000
+  },
+  {
+    "event_type": "SOCKET_CONNECT",
+    "timestamp": 1792668862.9186823,
+    "process_id": 2076,
+    "process_name": "python.exe",
+    "src_ip": "127.0.0.1",
+    "src_port": 57181,
+    "dst_ip": "127.0.0.1",
+    "dst_port": 28443,
+    "protocol": "TCP",
+    "return_code": 0
+  },
+  {
+    "event_type": "SOCKET_SEND",
+    "timestamp": 1792668862.9193523,
+    "process_id": 2076,
+    "process_name": "python.exe",
+    "src_ip": "127.0.0.1",
+    "src_port": 57181,
+    "dst_ip": "127.0.0.1",
+    "dst_port": 28443,
+    "protocol": "TCP",
+    "bytes_count": 45,
+    "return_code": 45
+  }
+]

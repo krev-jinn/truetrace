@@ -1,0 +1,21 @@
+[
+  {
+    "event_type": "PROCESS_SPAWN",
+    "timestamp": 1718000010.0,
+    "process_id": 2040,
+    "process_name": "powershell.exe",
+    "parent_process_id": 900
+  },
+  {
+    "event_type": "SOCKET_CONNECT",
+    "timestamp": 1718000010.2,
+    "process_id": 2040,
+    "process_name": "powershell.exe",
+    "src_ip": "192.168.1.105",
+    "src_port": 50110,
+    "dst_ip": "192.168.1.150",
+    "dst_port": 445,
+    "protocol": "TCP",
+    "return_code": 0
+  }
+]
