@@ -92,7 +92,7 @@ async def upload_evidence(
         with conn:
             for p in pkts:
                 conn.execute(
-                    """INSERT INTO network_packets
+                    """INSERT OR REPLACE INTO network_packets
                        (id, investigation_id, evidence_id, timestamp, timestamp_iso, src_ip, src_port, dst_ip, dst_port, protocol, tcp_flags, seq_num, ack_num, payload_len, sensor_id, summary)
                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
                     (p.id, p.investigation_id, p.evidence_id, p.timestamp, p.timestamp_iso, p.src_ip, p.src_port, p.dst_ip, p.dst_port, p.protocol, json.dumps(p.tcp_flags), p.seq_num, p.ack_num, p.payload_len, p.sensor_id, p.summary)
@@ -104,14 +104,14 @@ async def upload_evidence(
         with conn:
             for e in events:
                 conn.execute(
-                    """INSERT INTO host_events
+                    """INSERT OR REPLACE INTO host_events
                        (id, investigation_id, evidence_id, timestamp, timestamp_iso, event_type, process_id, process_name, parent_process_id, file_path, src_ip, src_port, dst_ip, dst_port, protocol, bytes_count, return_code, raw_record)
                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
                     (e.id, e.investigation_id, e.evidence_id, e.timestamp, e.timestamp_iso, e.event_type.value, e.process_id, e.process_name, e.parent_process_id, e.file_path, e.src_ip, e.src_port, e.dst_ip, e.dst_port, e.protocol, e.bytes_count, e.return_code, json.dumps(e.raw_record))
                 )
             for c in claims:
                 conn.execute(
-                    """INSERT INTO network_claims
+                    """INSERT OR REPLACE INTO network_claims
                        (id, investigation_id, source_event_id, claim_type, src_ip, src_port, dst_ip, dst_port, protocol, timestamp, timestamp_iso, tolerance_seconds, claimed_bytes, candidate_edge_id, description)
                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
                     (c.id, c.investigation_id, c.source_event_id, c.claim_type.value, c.src_ip, c.src_port, c.dst_ip, c.dst_port, c.protocol, c.timestamp, c.timestamp_iso, c.tolerance_seconds, c.claimed_bytes, c.candidate_edge_id, c.description)

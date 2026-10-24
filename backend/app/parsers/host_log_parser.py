@@ -129,7 +129,7 @@ def parse_host_log_file(filepath: str, investigation_id: str, evidence_id: str) 
 
         # Synthesize Network Claim if the event has network implications
         if evt_type == HostEventType.SOCKET_CONNECT and dst_ip and dst_port:
-            claim_id = f"claim-{investigation_id}-{len(claims)+1:03d}"
+            claim_id = f"claim-{evidence_id}-{len(claims)+1:03d}"
             desc = f"Process '{proc_name or 'unknown'}' (PID {proc_id}) claims to have established a TCP connection to {dst_ip}:{dst_port}"
             claims.append(NetworkClaim(
                 id=claim_id,
@@ -148,7 +148,7 @@ def parse_host_log_file(filepath: str, investigation_id: str, evidence_id: str) 
                 description=desc
             ))
         elif evt_type == HostEventType.SOCKET_SEND and dst_ip and dst_port:
-            claim_id = f"claim-{investigation_id}-{len(claims)+1:03d}"
+            claim_id = f"claim-{evidence_id}-{len(claims)+1:03d}"
             desc = f"Process '{proc_name or 'unknown'}' (PID {proc_id}) claims to have transmitted {bytes_count} bytes to {dst_ip}:{dst_port}"
             claims.append(NetworkClaim(
                 id=claim_id,

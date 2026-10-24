@@ -1,0 +1,34 @@
+[
+  {
+    "event_type": "PROCESS_SPAWN",
+    "timestamp": 1718000030.0,
+    "process_id": 4010,
+    "process_name": "nc.exe",
+    "parent_process_id": 1000
+  },
+  {
+    "event_type": "SOCKET_CONNECT",
+    "timestamp": 1718000030.1,
+    "process_id": 4010,
+    "process_name": "nc.exe",
+    "src_ip": "192.168.1.105",
+    "src_port": 53000,
+    "dst_ip": "203.0.113.88",
+    "dst_port": 9001,
+    "protocol": "TCP",
+    "return_code": 0
+  },
+  {
+    "event_type": "SOCKET_SEND",
+    "timestamp": 1718000030.3,
+    "process_id": 4010,
+    "process_name": "nc.exe",
+    "src_ip": "192.168.1.105",
+    "src_port": 53000,
+    "dst_ip": "203.0.113.88",
+    "dst_port": 9001,
+    "protocol": "TCP",
+    "bytes_count": 8192,
+    "return_code": 8192
+  }
+]
