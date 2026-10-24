@@ -5,7 +5,7 @@ import {
 } from '@xyflow/react';
 import { 
   GitCommit, CheckCircle2, XCircle, HelpCircle, 
-  Info, Cpu, FileCode, Globe, ShieldAlert, ArrowRight
+  Info, Cpu, FileCode, Globe, ShieldAlert, ArrowRight, RefreshCw
 } from 'lucide-react';
 import { fetchCandidateGraph, fetchRefinedGraph } from '../api';
 import { FlowGraphResponse } from '../types';
@@ -148,6 +148,15 @@ export const AttackGraphView: React.FC<AttackGraphViewProps> = ({ investigationI
               <div style={{ fontSize: '0.8rem', color: 'var(--text-dim)' }}>
                 {nodes.length} Nodes &bull; {edges.length} Edges
               </div>
+
+              <button
+                className="btn btn-secondary"
+                style={{ padding: '0.25rem 0.6rem', fontSize: '0.75rem', display: 'flex', alignItems: 'center', gap: '0.35rem' }}
+                onClick={() => loadGraph(graphMode)}
+                title="Reload current graph state"
+              >
+                <RefreshCw size={12} className={loading ? 'spin' : ''} /> Refresh Graph
+              </button>
             </div>
 
             {/* Invariant Legend */}

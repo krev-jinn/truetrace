@@ -82,4 +82,12 @@ def update_sensor(sensor_id: str, sensor: SensorConfig):
             )
         )
     conn.close()
+
+    # Automatically recompute arbitration & refined attack graph for the investigation!
+    try:
+        from .arbitration import execute_arbitration_logic
+        execute_arbitration_logic(sensor.investigation_id)
+    except Exception as e:
+        print(f"Auto-arbitration error after updating sensor: {e}")
+
     return sensor

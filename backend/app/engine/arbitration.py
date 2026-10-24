@@ -38,50 +38,48 @@ def arbitrate_claim(
     # Preconditions: Sensor Observability Check
     # -------------------------------------------------------------------------
     if obs_status == ObservabilityStatus.UNOBSERVABLE:
-        # If no packets observed AND flow was unobservable -> UNRESOLVED
-        if not matched_flow.all_matched_packets:
-            return ArbitrationResult(
-                id=f"arb-{uuid.uuid4().hex[:8]}",
-                claim_id=claim.id,
-                investigation_id=claim.investigation_id,
-                verdict=Verdict.UNRESOLVED,
-                applied_rule="INV-OBS-02: Sensor Visibility Gap (Unobservable Flow)",
-                reasoning=(
-                    "Target communication was outside registered sensor topology or active capture window. "
-                    "Under TrueTrace formal invariants, absence of network evidence cannot refute a host claim "
-                    "unless observability is rigorously established."
-                ),
-                observability_status=obs_status,
-                observability_reasoning=obs_reasoning,
-                matching_packet_ids=[],
-                conflicting_packet_ids=[],
-                matching_evidence_summaries=[],
-                timestamp_delta=None,
-                sensor_id=None,
-                epistemic_notes="Preserved hypothesis with explicit visibility gap warning. Do not discard candidate edge."
-            )
+        return ArbitrationResult(
+            id=f"arb-{uuid.uuid4().hex[:8]}",
+            claim_id=claim.id,
+            investigation_id=claim.investigation_id,
+            verdict=Verdict.UNRESOLVED,
+            applied_rule="INV-OBS-02: Sensor Visibility Gap (Unobservable Flow)",
+            reasoning=(
+                f"Target communication ({claim.src_ip} -> {claim.dst_ip}:{claim.dst_port}) was outside registered sensor topology or active capture window. "
+                f"Under TrueTrace formal invariants, absence of network evidence cannot refute a host claim "
+                f"unless observability is rigorously established. Preserved as UNRESOLVED."
+            ),
+            observability_status=obs_status,
+            observability_reasoning=obs_reasoning,
+            matching_packet_ids=[],
+            conflicting_packet_ids=[],
+            matching_evidence_summaries=[],
+            timestamp_delta=None,
+            sensor_id=None,
+            epistemic_notes="Preserved hypothesis with explicit visibility gap warning. Do not discard candidate edge."
+        )
 
     if obs_status == ObservabilityStatus.DEGRADED_VISIBILITY:
-        if not matched_flow.all_matched_packets:
-            return ArbitrationResult(
-                id=f"arb-{uuid.uuid4().hex[:8]}",
-                claim_id=claim.id,
-                investigation_id=claim.investigation_id,
-                verdict=Verdict.UNRESOLVED,
-                applied_rule="INV-OBS-03: Degraded Sensor Telemetry (Packet Loss Flagged)",
-                reasoning=(
-                    "The monitoring sensor flagged hardware packet loss / buffer ring overflow during this capture window. "
-                    "Missing packets may be artifacts of sensor loss rather than true non-occurrence."
-                ),
-                observability_status=obs_status,
-                observability_reasoning=obs_reasoning,
-                matching_packet_ids=[],
-                conflicting_packet_ids=[],
-                matching_evidence_summaries=[],
-                timestamp_delta=None,
-                sensor_id=sensor_id,
-                epistemic_notes="Degraded sensor confidence. Verdict held in abeyance pending re-capture."
-            )
+        return ArbitrationResult(
+            id=f"arb-{uuid.uuid4().hex[:8]}",
+            claim_id=claim.id,
+            investigation_id=claim.investigation_id,
+            verdict=Verdict.UNRESOLVED,
+            applied_rule="INV-OBS-03: Degraded Sensor Telemetry (Packet Loss Flagged)",
+            reasoning=(
+                f"The monitoring sensor '{sensor_id or 'tap'}' flagged hardware packet loss / buffer ring overflow during this capture window. "
+                f"Under TrueTrace epistemic invariants, evidence completeness cannot be guaranteed even if partial packets were observed ({len(matched_pkt_ids)} packet(s) seen). "
+                f"Host claim to {claim.dst_ip}:{claim.dst_port} is held in abeyance (UNRESOLVED) pending lossless re-capture."
+            ),
+            observability_status=obs_status,
+            observability_reasoning=obs_reasoning,
+            matching_packet_ids=matched_pkt_ids,
+            conflicting_packet_ids=[],
+            matching_evidence_summaries=matched_summaries,
+            timestamp_delta=ts_delta,
+            sensor_id=sensor_id,
+            epistemic_notes="Degraded sensor confidence. Hardware packet loss detected on capture tap."
+        )
 
     # -------------------------------------------------------------------------
     # TCP Handshake Claims

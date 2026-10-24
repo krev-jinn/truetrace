@@ -166,7 +166,11 @@ export function App() {
         )}
 
         {activeTab === 'sensors' && activeInvId && (
-          <SensorsView investigationId={activeInvId} />
+          <SensorsView
+            investigationId={activeInvId}
+            onRefresh={loadData}
+            onNavigateTab={setActiveTab}
+          />
         )}
 
         {activeTab === 'scenarios' && (

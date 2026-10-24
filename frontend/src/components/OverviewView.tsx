@@ -23,6 +23,7 @@ export const OverviewView: React.FC<OverviewViewProps> = ({
   const [running, setRunning] = useState(false);
   const [uploadDesc, setUploadDesc] = useState('');
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [uploadSuccess, setUploadSuccess] = useState<string | null>(null);
 
   if (!investigation) {
     return (
@@ -41,13 +42,18 @@ export const OverviewView: React.FC<OverviewViewProps> = ({
     e.preventDefault();
     if (!selectedFile) return;
     setUploading(true);
+    setUploadSuccess(null);
     try {
-      await uploadEvidenceFile(investigation.id, selectedFile, uploadDesc);
+      const res = await uploadEvidenceFile(investigation.id, selectedFile, uploadDesc);
       setSelectedFile(null);
       setUploadDesc('');
       onRefresh();
+      const count = res.parsed_events || res.parsed_packets || 0;
+      const msg = `✅ File '${res.file_name}' uploaded successfully! Parsed ${count} ${res.evidence_type === 'PCAP_CAPTURE' ? 'packets' : 'events'}. SHA-256: ${res.sha256.substring(0, 16)}...`;
+      setUploadSuccess(msg);
+      alert(`✅ Evidence Uploaded Successfully!\n\nFile: ${res.file_name}\nFormat: ${res.evidence_type}\nSHA-256: ${res.sha256.substring(0, 16)}...\nProcessed: ${count} record(s).\n\nClick 'Run Invariant Arbitration' to verify against network ground truth!`);
     } catch (err: any) {
-      alert(`Upload error: ${err.message}`);
+      alert(`❌ Upload error: ${err.message}`);
     } finally {
       setUploading(false);
     }
@@ -189,6 +195,11 @@ export const OverviewView: React.FC<OverviewViewProps> = ({
               <Upload size={18} color="var(--cyan-primary)" /> Upload Evidence
             </div>
           </div>
+          {uploadSuccess && (
+            <div style={{ background: '#064e3b', border: '1px solid #10b981', color: '#6ee7b7', padding: '0.6rem 0.8rem', borderRadius: '4px', fontSize: '0.8rem', marginBottom: '1rem', lineHeight: 1.4 }}>
+              {uploadSuccess}
+            </div>
+          )}
           <form onSubmit={handleUpload}>
             <div style={{ marginBottom: '1rem' }}>
               <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: '0.35rem' }}>

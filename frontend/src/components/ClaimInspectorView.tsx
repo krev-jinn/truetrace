@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { 
   CheckCircle2, XCircle, HelpCircle, Filter, 
-  Search, ShieldAlert, FileText, ArrowRight 
+  Search, ShieldAlert, FileText, ArrowRight, RefreshCw 
 } from 'lucide-react';
 import { NetworkClaim, ArbitrationResult, Verdict } from '../types';
 import { fetchClaims, fetchArbitrationResults } from '../api';
@@ -17,7 +17,7 @@ export const ClaimInspectorView: React.FC<ClaimInspectorViewProps> = ({ investig
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [selectedClaim, setSelectedClaim] = useState<{ claim: NetworkClaim; arb?: ArbitrationResult } | null>(null);
 
-  useEffect(() => {
+  const loadData = () => {
     if (investigationId) {
       Promise.all([
         fetchClaims(investigationId),
@@ -27,6 +27,10 @@ export const ClaimInspectorView: React.FC<ClaimInspectorViewProps> = ({ investig
         setResults(rList);
       }).catch(console.error);
     }
+  };
+
+  useEffect(() => {
+    loadData();
   }, [investigationId]);
 
   const arbMap = new Map<string, ArbitrationResult>();
@@ -90,9 +94,17 @@ export const ClaimInspectorView: React.FC<ClaimInspectorViewProps> = ({ investig
                 padding: '0.35rem 0.65rem',
                 fontSize: '0.8rem',
                 color: '#fff',
-                width: '220px'
+                width: '200px'
               }}
             />
+            <button
+              className="btn btn-secondary"
+              style={{ padding: '0.3rem 0.65rem', fontSize: '0.75rem', display: 'flex', alignItems: 'center', gap: '0.35rem' }}
+              onClick={loadData}
+              title="Refresh claims"
+            >
+              <RefreshCw size={13} /> Refresh
+            </button>
           </div>
         </div>
       </div>

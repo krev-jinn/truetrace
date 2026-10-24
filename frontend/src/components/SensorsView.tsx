@@ -8,9 +8,11 @@ import { fetchSensors, updateSensor } from '../api';
 
 interface SensorsViewProps {
   investigationId: string;
+  onRefresh?: () => void;
+  onNavigateTab?: (tab: string) => void;
 }
 
-export const SensorsView: React.FC<SensorsViewProps> = ({ investigationId }) => {
+export const SensorsView: React.FC<SensorsViewProps> = ({ investigationId, onRefresh, onNavigateTab }) => {
   const [sensors, setSensors] = useState<SensorConfig[]>([]);
   const [editingSensor, setEditingSensor] = useState<SensorConfig | null>(null);
   const [cidrInput, setCidrInput] = useState('');
@@ -27,12 +29,32 @@ export const SensorsView: React.FC<SensorsViewProps> = ({ investigationId }) => 
 
   const handleToggleDrop = async (sensor: SensorConfig) => {
     try {
+      const willEnableLoss = !sensor.packet_loss_detected;
       const updated: SensorConfig = {
         ...sensor,
-        packet_loss_detected: !sensor.packet_loss_detected
+        packet_loss_detected: willEnableLoss
       };
       await updateSensor(sensor.id, updated);
       loadSensors();
+      if (onRefresh) onRefresh();
+
+      if (willEnableLoss) {
+        alert(
+          '⚠️ HARDWARE PACKET LOSS SIMULATED!\n\n' +
+          'Sensor is now flagged with buffer ring drops.\n' +
+          'Arbitration has automatically re-evaluated all claims:\n' +
+          '• Verdict downgraded to UNRESOLVED\n' +
+          '• Applied Rule: INV-OBS-03 (Degraded Sensor Telemetry)\n\n' +
+          'Switch to the "Attack Graph" tab to see the edges turn dashed amber!'
+        );
+      } else {
+        alert(
+          '✅ PACKET LOSS CLEARED!\n\n' +
+          'Sensor telemetry is now lossless (100% OK).\n' +
+          'Arbitration has automatically re-evaluated all claims back to SUPPORTED baseline!\n\n' +
+          'Switch to the "Attack Graph" tab to see the edges turn solid green!'
+        );
+      }
     } catch (err: any) {
       alert(`Error toggling loss: ${err.message}`);
     }
@@ -49,6 +71,12 @@ export const SensorsView: React.FC<SensorsViewProps> = ({ investigationId }) => 
       });
       setEditingSensor(null);
       loadSensors();
+      if (onRefresh) onRefresh();
+      alert(
+        `✅ Monitored CIDR subnets updated to: ${cidrs.join(', ')}\n\n` +
+        'Arbitration automatically re-evaluated! If the target traffic is outside these subnets, TrueTrace flags INV-OBS-02 (Sensor Visibility Gap) and marks the edges as UNRESOLVED.\n\n' +
+        'Check the "Attack Graph" tab to inspect the updated graph!'
+      );
     } catch (err: any) {
       alert(`Error updating CIDRs: ${err.message}`);
     }
@@ -195,12 +223,33 @@ export const SensorsView: React.FC<SensorsViewProps> = ({ investigationId }) => 
                     fontSize: '0.85rem'
                   }}
                 />
-                <span style={{ fontSize: '0.72rem', color: 'var(--text-dim)', marginTop: '4px', display: 'block' }}>
-                  Restricting CIDRs will trigger the observability check to classify out-of-scope communications as UNRESOLVED.
+                
+                {/* One-click Demo Preset Buttons */}
+                <div style={{ marginTop: '0.6rem', display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+                  <button
+                    type="button"
+                    className="btn btn-secondary"
+                    style={{ fontSize: '0.72rem', padding: '0.2rem 0.5rem' }}
+                    onClick={() => setCidrInput('10.0.0.0/24')}
+                  >
+                    Preset: Blindspot (10.0.0.0/24)
+                  </button>
+                  <button
+                    type="button"
+                    className="btn btn-secondary"
+                    style={{ fontSize: '0.72rem', padding: '0.2rem 0.5rem' }}
+                    onClick={() => setCidrInput('192.168.1.0/24, 198.51.100.0/24')}
+                  >
+                    Preset: Full Baseline (192.168.1.0/24, 198.51.100.0/24)
+                  </button>
+                </div>
+
+                <span style={{ fontSize: '0.72rem', color: 'var(--text-dim)', marginTop: '6px', display: 'block' }}>
+                  Setting CIDRs outside the attack traffic (e.g. <code>10.0.0.0/24</code>) triggers invariant <code>INV-OBS-02</code>, classifying out-of-scope communications as <code>UNRESOLVED</code>.
                 </span>
               </div>
               <button type="submit" className="btn btn-primary" style={{ width: '100%' }}>
-                Save Sensor Scope
+                Save Sensor Scope & Re-arbitrate
               </button>
             </form>
           </div>

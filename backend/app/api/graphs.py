@@ -73,11 +73,31 @@ def convert_to_xyflow(graph: AttackGraph) -> Dict[str, Any]:
             stroke_dash = "3,3"
             stroke_width = 2
 
+        # Form clear edge label indicating relationship and verdict
+        if e.is_network_dependent and verdict and verdict not in ("PENDING", "INTERNAL"):
+            edge_label = f"{e.relation} [{verdict}]"
+        else:
+            edge_label = e.relation
+
         xy_edges.append({
             "id": e.id,
             "source": e.source,
             "target": e.target,
-            "type": "customEdge",
+            "type": "default",
+            "label": edge_label,
+            "labelStyle": {
+                "fill": stroke_color,
+                "fontWeight": 700,
+                "fontSize": 11
+            },
+            "labelBgStyle": {
+                "fill": "#0b1329",
+                "fillOpacity": 0.9,
+                "stroke": stroke_color,
+                "strokeWidth": 1.5
+            },
+            "labelBgPadding": [6, 3],
+            "labelBgBorderRadius": 4,
             "animated": verdict == "SUPPORTED",
             "data": {
                 "id": e.id,

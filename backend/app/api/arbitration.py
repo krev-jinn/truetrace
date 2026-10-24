@@ -72,8 +72,7 @@ def list_results(inv_id: str):
     return results
 
 
-@router.post("/run/{inv_id}")
-def run_arbitration(inv_id: str):
+def execute_arbitration_logic(inv_id: str) -> Dict[str, Any]:
     conn = get_db_connection()
 
     # 1. Fetch claims
@@ -201,3 +200,8 @@ def run_arbitration(inv_id: str):
         "summary": summary,
         "results": [r.model_dump() for r in arbitration_results]
     }
+
+
+@router.post("/run/{inv_id}")
+def run_arbitration(inv_id: str):
+    return execute_arbitration_logic(inv_id)
